@@ -1,0 +1,2824 @@
+<!DOCTYPE html>
+<!--
+  SPDX-License-Identifier: MIT
+  Copyright (c) 2026 MSP LLC
+  See the LICENSE file at the repository root for the full MIT License text.
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oakspoke</title>
+    <link rel="icon" type="image/x-icon" href="./img/favicon.ico">
+    <script type="module" src="./js/oakspoke-emoji.js"></script>
+    <script src="./js/qr.js"></script>
+
+    <style>
+        /* =================================================================
+           BRAND TOKENS
+           ================================================================= */
+        :root {
+            /* Primary – dark rich burnt umber family */
+            --oak-primary: #6e3218;
+            --oak-primary-hover: #542710;
+            --oak-primary-light: rgba(110, 50, 24, 0.10);
+            --oak-primary-focus: rgba(110, 50, 24, 0.28);
+
+            /* Accent – warm amber */
+            --oak-accent: #c4820e;
+            --oak-accent-hover: #a66c08;
+
+            /* Neutrals */
+            --oak-text: #1e2a1e;
+            --oak-text-secondary: #5a6b5a;
+            --oak-border: #d2d9d2;
+            --oak-border-light: #e6ebe6;
+            --oak-bg: #fafbfa;
+            --oak-bg-surface: #ffffff;
+            --oak-bg-muted: #f1f4f1;
+
+            /* Semantic */
+            --oak-success: #3a7d44;
+            --oak-warning-text: #7a5d00;
+            --oak-warning-bg: #fff8e6;
+            --oak-warning-border: #f5e0a0;
+
+            /* Shadows */
+            --oak-shadow-sm: 0 1px 2px rgba(30, 42, 30, 0.06);
+            --oak-shadow-md: 0 2px 8px rgba(30, 42, 30, 0.08), 0 1px 2px rgba(30, 42, 30, 0.04);
+            --oak-shadow-lg: 0 4px 16px rgba(30, 42, 30, 0.10), 0 2px 4px rgba(30, 42, 30, 0.06);
+
+            /* Radius */
+            --oak-radius: 0.375rem;
+            --oak-radius-lg: 0.5rem;
+
+            /* Transitions */
+            --oak-transition: 0.2s ease;
+        }
+
+        /* =================================================================
+           CSS RESET & BASE
+           ================================================================= */
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--oak-text);
+            background-color: var(--oak-bg);
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        a {
+            color: var(--oak-primary);
+            text-decoration: none;
+            transition: color var(--oak-transition);
+        }
+
+        a:hover {
+            color: var(--oak-primary-hover);
+            text-decoration: underline;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            line-height: 1.2;
+            color: var(--oak-text);
+        }
+
+        p {
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+
+        small {
+            font-size: 80%;
+        }
+
+        pre {
+            margin: 0;
+            overflow: auto;
+            font-family: SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 87.5%;
+        }
+
+        hr {
+            margin: 1rem 0;
+            border: 0;
+            border-top: 1px solid var(--oak-border-light);
+        }
+
+        /* =================================================================
+           LAYOUT - CONTAINER
+           ================================================================= */
+        .container {
+            width: 100%;
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* =================================================================
+           GRID SYSTEM
+           ================================================================= */
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -15px;
+        }
+
+        .col-md-8 {
+            flex: 0 0 100%;
+            max-width: 100%;
+            padding: 0 15px;
+        }
+
+        .col-md-12 {
+            flex: 0 0 100%;
+            max-width: 100%;
+            padding: 0 15px;
+        }
+
+        @media (min-width: 768px) {
+            .col-md-8 {
+                flex: 0 0 66.666667%;
+                max-width: 66.666667%;
+            }
+
+            .offset-md-2 {
+                margin-left: 16.666667%;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .row {
+                flex-direction: column;
+            }
+        }
+
+        /* =================================================================
+           NAVIGATION TABS
+           ================================================================= */
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            border-bottom: 2px solid var(--oak-border-light);
+        }
+
+        .nav-item {
+            margin-bottom: -2px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.6rem 1.1rem;
+            color: var(--oak-text-secondary);
+            font-weight: 500;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            border-top-left-radius: var(--oak-radius);
+            border-top-right-radius: var(--oak-radius);
+            cursor: pointer;
+            text-decoration: none;
+            transition: color var(--oak-transition), border-color var(--oak-transition), background-color var(--oak-transition);
+        }
+
+        .nav-link:hover {
+            color: var(--oak-primary);
+            background-color: var(--oak-primary-light);
+            border-bottom-color: var(--oak-border);
+            text-decoration: none;
+        }
+
+        .nav-link.active {
+            color: var(--oak-primary);
+            background-color: transparent;
+            border-bottom-color: var(--oak-primary);
+            font-weight: 600;
+        }
+
+        .nav-link:focus-visible {
+            outline: 2px solid var(--oak-primary);
+            outline-offset: -2px;
+        }
+
+        .tab-content {
+            padding-top: 1rem;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* =================================================================
+           FORMS
+           ================================================================= */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-control {
+            display: block;
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: var(--oak-text);
+            background-color: var(--oak-bg-surface);
+            background-clip: padding-box;
+            border: 1px solid var(--oak-border);
+            border-radius: var(--oak-radius);
+            transition: border-color var(--oak-transition), box-shadow var(--oak-transition);
+        }
+
+        .form-control:focus {
+            color: var(--oak-text);
+            background-color: var(--oak-bg-surface);
+            border-color: var(--oak-primary);
+            outline: 0;
+            box-shadow: 0 0 0 3px var(--oak-primary-focus);
+        }
+
+        .form-control::placeholder {
+            color: var(--oak-text-secondary);
+            opacity: 1;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+        }
+
+        label {
+            display: inline-block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--oak-text);
+        }
+
+        /* Input Group */
+        .input-group {
+            position: relative;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: stretch;
+            width: 100%;
+        }
+
+        .input-group > .form-control {
+            position: relative;
+            flex: 1 1 auto;
+            width: 1%;
+            min-width: 0;
+        }
+
+        .input-group > .form-control:not(:last-child) {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        .input-group-append {
+            display: flex;
+            margin-left: -1px;
+        }
+
+        .input-group-append > .btn {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        /* =================================================================
+           BUTTONS
+           ================================================================= */
+        .btn {
+            display: inline-block;
+            font-weight: 500;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            user-select: none;
+            border: 1px solid transparent;
+            padding: 0.45rem 0.9rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            border-radius: var(--oak-radius);
+            cursor: pointer;
+            transition: color var(--oak-transition), background-color var(--oak-transition),
+                        border-color var(--oak-transition), box-shadow var(--oak-transition),
+                        transform 0.1s ease;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: var(--oak-shadow-md);
+        }
+
+        .btn:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: var(--oak-shadow-sm);
+        }
+
+        .btn:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+        .btn:focus-visible {
+            outline: 2px solid var(--oak-primary);
+            outline-offset: 2px;
+        }
+
+        .btn-primary {
+            color: #fff;
+            background-color: var(--oak-primary);
+            border-color: var(--oak-primary);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background-color: var(--oak-primary-hover);
+            border-color: var(--oak-primary-hover);
+        }
+
+        .btn-outline-primary {
+            color: var(--oak-primary);
+            background-color: transparent;
+            border-color: var(--oak-primary);
+        }
+
+        .btn-outline-primary:hover:not(:disabled) {
+            color: #fff;
+            background-color: var(--oak-primary);
+            border-color: var(--oak-primary);
+        }
+
+        .btn-outline-secondary {
+            color: var(--oak-text-secondary);
+            background-color: transparent;
+            border-color: var(--oak-border);
+        }
+
+        .btn-outline-secondary:hover:not(:disabled) {
+            color: var(--oak-text);
+            background-color: var(--oak-bg-muted);
+            border-color: var(--oak-border);
+        }
+
+        .btn-sm {
+            padding: 0.3rem 0.6rem;
+            font-size: 0.875rem;
+            border-radius: 0.25rem;
+        }
+
+        /* =================================================================
+           CARDS
+           ================================================================= */
+        .card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--oak-bg-surface);
+            border: 1px solid var(--oak-border-light);
+            border-radius: var(--oak-radius-lg);
+            box-shadow: var(--oak-shadow-sm);
+            transition: box-shadow var(--oak-transition);
+        }
+
+        .card:hover {
+            box-shadow: var(--oak-shadow-md);
+        }
+
+        .card-body {
+            flex: 1 1 auto;
+            padding: 1.25rem;
+        }
+
+        .card-title {
+            margin-bottom: 0.75rem;
+        }
+
+        /* =================================================================
+           ALERTS
+           ================================================================= */
+        .alert {
+            position: relative;
+            padding: 0.75rem 1.25rem;
+            margin-bottom: 1rem;
+            border: 1px solid transparent;
+            border-radius: var(--oak-radius);
+        }
+
+        .alert-warning {
+            color: var(--oak-warning-text);
+            background-color: var(--oak-warning-bg);
+            border-color: var(--oak-warning-border);
+        }
+
+        /* =================================================================
+           UTILITIES - SPACING
+           ================================================================= */
+        .mt-3 { margin-top: 1rem; }
+        .mt-4 { margin-top: 1.5rem; }
+        .mb-3 { margin-bottom: 1rem; }
+        .mb-4 { margin-bottom: 1.5rem; }
+        .my-1 { margin-top: 0.25rem; margin-bottom: 0.25rem; }
+        .my-3 { margin-top: 1rem; margin-bottom: 1rem; }
+
+        /* =================================================================
+           UTILITIES - FLEXBOX
+           ================================================================= */
+        .d-flex { display: flex; }
+        .flex-column { flex-direction: column; }
+        .align-items-center { align-items: center; }
+        .justify-content-center { justify-content: center; }
+
+        .map-tab-main {
+            width: 100%;
+        }
+
+        /* =================================================================
+           SPINNER ANIMATION
+           ================================================================= */
+        .spinner {
+            display: none;
+            border: 3px solid var(--oak-border-light);
+            border-top: 3px solid var(--oak-primary);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* =================================================================
+           EMOJI PICKER
+           ================================================================= */
+        .send-dest-latlong {
+            color: var(--oak-text-secondary);
+            font-size: 0.875rem;
+        }
+
+        #emojiPickerContainer {
+            z-index: 1000;
+        }
+
+        emoji-picker {
+            --emoji-size: 1.5rem;
+            --num-columns: 8;
+            --category-emoji-size: 1.2rem;
+        }
+
+        /* =================================================================
+           CANVAS - RESPONSIVE
+           ================================================================= */
+        canvas {
+            width: 512px;
+            height: 512px;
+            border-radius: var(--oak-radius-lg);
+        }
+
+        @media (max-width: 768px) {
+            canvas {
+                width: 100%;
+                aspect-ratio: 1 / 1;
+                max-width: 512px;
+                height: auto;
+            }
+        }
+
+        /* =================================================================
+           ICONS (replacing Font Awesome)
+           ================================================================= */
+        .icon {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            vertical-align: -0.125em;
+        }
+
+        .icon-search::before { content: "🔍"; }
+        .icon-save::before { content: "💾"; }
+        .icon-folder::before { content: "📁"; }
+        .icon-check::before { content: "✅"; }
+
+        /* =================================================================
+           FOOTER
+           ================================================================= */
+        footer {
+            padding: 1.5rem 0;
+            text-align: center;
+            color: var(--oak-text-secondary);
+            border-top: 1px solid var(--oak-border-light);
+            margin-top: 2rem;
+        }
+
+        /* =================================================================
+           CUSTOM COMPONENT STYLES
+           ================================================================= */
+        #latLongBalanceContainer {
+            border: 1px solid var(--oak-border);
+            border-radius: var(--oak-radius-lg);
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            background: var(--oak-bg-surface);
+            box-shadow: var(--oak-shadow-sm);
+        }
+
+        /* History tab: balance first; lat/long is reference-only, de-emphasized */
+        #latLongBalanceContainer #latLongInfo {
+            margin-top: 0.35rem;
+            margin-bottom: 0;
+            color: #9aa3a0;
+            font-size: 0.875rem;
+            font-weight: 400;
+            line-height: 1.35;
+        }
+
+        /* Screen-reader / password-manager: real username slot paired with GeoKey password (not destination). */
+        .send-pm-username-slot {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        #latLongBalanceContainer #balanceInfo {
+            color: var(--oak-primary);
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+
+        #congratulationsMessage h5 {
+            margin: 0;
+        }
+
+        .oak-claim-celebrate-title {
+            font-size: 1.65rem;
+            font-weight: 700;
+            line-height: 1.3;
+            color: var(--oak-success);
+        }
+
+        @media (min-width: 576px) {
+            .oak-claim-celebrate-title {
+                font-size: 1.85rem;
+            }
+        }
+
+        .geo-key-password-hint {
+            margin: 0 0 0.5rem 0;
+            font-size: 0.875rem;
+            line-height: 1.45;
+            color: var(--oak-text-secondary);
+        }
+
+        .geo-key-claim-public-label {
+            display: block;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.35rem;
+            color: var(--oak-text);
+        }
+
+        .geo-key-claim-public-address {
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            word-break: break-all;
+            color: var(--oak-text);
+        }
+
+        .transaction-report-outcome {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0 0 1rem 0;
+            letter-spacing: 0.02em;
+        }
+
+        .transaction-report-outcome--success {
+            color: #198754;
+        }
+
+        .transaction-report-outcome--failure {
+            color: #b02a37;
+        }
+
+        #resultOutcome.transaction-report-outcome {
+            margin-bottom: 1rem;
+        }
+
+        #sendResultsContainer .card-body > p:not(.mb-2):not(#resultOutcome) {
+            margin-bottom: 0.5rem;
+        }
+
+        #resultStatus {
+            background: var(--oak-bg-muted);
+            padding: 12px;
+            border-radius: var(--oak-radius);
+            border: 1px solid var(--oak-border-light);
+        }
+
+        #blockchainContainer {
+            min-height: 140px;
+            max-height: min(500px, 62vh);
+            overflow-x: hidden;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior-y: contain;
+            font-size: 0.91rem;
+            line-height: 1.45;
+            color: var(--oak-text);
+        }
+
+        #blockchainContainer table.oak-history-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            margin-bottom: 0;
+        }
+
+        #blockchainContainer table.oak-history-table th {
+            background: var(--oak-bg-muted, #f1f3f5);
+            text-align: left;
+            padding: 5px 8px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--oak-border-light, #dee2e6);
+            font-size: 0.75rem;
+            color: var(--oak-text);
+        }
+
+        #blockchainContainer table.oak-history-table td {
+            padding: 4px 8px;
+            border-bottom: 1px solid var(--oak-border-light, #eee);
+            word-break: break-word;
+            vertical-align: top;
+        }
+
+        #blockchainContainer table.oak-history-table tbody tr:hover {
+            background: var(--oak-bg-muted, #f8f9fa);
+        }
+
+        #blockchainContainer .oak-history-loc-suffix {
+            color: #b8c2b8;
+            font-weight: 500;
+        }
+
+        #blockchainContainer .oak-history-empty {
+            font-size: 0.85rem;
+            color: var(--oak-text-secondary);
+            font-style: italic;
+        }
+
+        #blockchainContainer .oak-history-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 28px 12px;
+            color: var(--oak-text-secondary);
+            font-size: 0.875rem;
+        }
+
+        #blockchainContainer .oak-history-spinner {
+            width: 28px;
+            height: 28px;
+            border: 3px solid var(--oak-border-light);
+            border-top-color: var(--oak-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .content p {
+            margin-bottom: 1rem;
+        }
+
+        /* Save GeoKey — high-attention CTA (success / critical action); beats Bootstrap .btn */
+        .btn.btn-save {
+            background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.0625rem;
+            padding: 0.55rem 1.4rem;
+            border: 2px solid #15803d;
+            border-radius: var(--oak-radius-lg);
+            box-shadow: 0 3px 12px rgba(22, 163, 74, 0.4), 0 1px 3px rgba(0, 0, 0, 0.12);
+            letter-spacing: 0.02em;
+            transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+        }
+
+        .btn.btn-save:hover {
+            background: linear-gradient(180deg, #16a34a 0%, #15803d 100%);
+            color: #fff;
+            filter: brightness(1.03);
+            box-shadow: 0 4px 16px rgba(22, 163, 74, 0.5), 0 2px 4px rgba(0, 0, 0, 0.14);
+        }
+
+        .btn.btn-save:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 8px rgba(22, 163, 74, 0.35);
+        }
+
+        .btn.btn-save:focus {
+            outline: none;
+        }
+
+        .btn.btn-save:focus-visible {
+            outline: 3px solid #86efac;
+            outline-offset: 3px;
+        }
+
+        /* Post-save GeoKey message: plain text, not a form card */
+        .geo-key-saved-plain {
+            margin-top: 1rem;
+            color: var(--oak-text);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            text-align: left;
+        }
+
+        .geo-key-saved-plain-title {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1.3;
+            color: var(--oak-success);
+        }
+
+        @media (min-width: 576px) {
+            .geo-key-saved-plain-title {
+                font-size: 1.65rem;
+            }
+        }
+
+        .geo-key-saved-location-label {
+            display: block;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.35rem;
+            color: var(--oak-text);
+        }
+
+        .geo-key-saved-location-address {
+            font-size: 0.95rem;
+            word-break: break-all;
+        }
+
+        .geo-key-saved-address-copy-row {
+            display: inline-flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            column-gap: 1ch;
+            row-gap: 0.35rem;
+            max-width: 100%;
+            vertical-align: top;
+        }
+
+        .geo-key-saved-address-copy-row .geo-key-saved-location-address {
+            flex: 0 1 auto;
+            min-width: 0;
+            margin-bottom: 0;
+        }
+
+        .geo-key-copy-address-btn {
+            flex-shrink: 0;
+            padding: 0.25rem 0.5rem;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .geo-key-copy-address-btn svg {
+            flex-shrink: 0;
+        }
+
+        .geo-key-share-btn {
+            flex-shrink: 0;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .geo-key-share-btn svg {
+            flex-shrink: 0;
+        }
+
+        .geo-key-saved-sub {
+            color: var(--oak-text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .geo-key-saved-share-qr-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Map is clickable */
+        #oakspokeMap {
+            cursor: pointer;
+            display: block;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            touch-action: manipulation;
+        }
+
+        .oakspoke-map-wrap {
+            position: relative;
+            border-radius: var(--oak-radius-lg);
+        }
+
+        .oakspoke-map-wrap--pulse {
+            animation: oakMapWrapPulse 2.4s ease-in-out infinite;
+        }
+
+        /* Pulse + box-shadow transitions fight each other on tap (flash on mobile). */
+        @media (pointer: coarse) {
+            .oakspoke-map-wrap--pulse {
+                animation: none;
+                box-shadow: none;
+            }
+
+            .oakspoke-map-wrap--show-fake-tap::after {
+                display: none;
+            }
+        }
+
+        @keyframes oakMapWrapPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(110, 50, 24, 0.18); }
+            50% { box-shadow: 0 0 0 10px rgba(110, 50, 24, 0.06); }
+        }
+
+        .oakspoke-map-wrap--show-fake-tap::after {
+            content: '';
+            position: absolute;
+            width: 44px;
+            height: 44px;
+            margin: -22px 0 0 -22px;
+            left: 54%;
+            top: 46%;
+            border-radius: 50%;
+            border: 3px solid var(--oak-primary);
+            pointer-events: none;
+            opacity: 0;
+            animation: oakFakeTapRing 0.85s ease-out 0.15s 2;
+        }
+
+        @keyframes oakFakeTapRing {
+            0% { transform: scale(0.45); opacity: 0.85; }
+            70% { transform: scale(1); opacity: 0.35; }
+            100% { transform: scale(1.35); opacity: 0; }
+        }
+
+        .map-tap-hint {
+            width: 100%;
+            max-width: 520px;
+            margin: 0 auto 0.75rem;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.9rem;
+            color: var(--oak-text-secondary);
+            background: var(--oak-primary-light);
+            border: 1px solid var(--oak-border);
+            border-radius: var(--oak-radius);
+            text-align: center;
+            transition: opacity 0.45s ease, max-height 0.45s ease, margin 0.45s ease, padding 0.45s ease;
+            max-height: 4rem;
+            overflow: hidden;
+        }
+
+        .map-tap-hint.map-tap-hint--dismissed {
+            opacity: 0;
+            max-height: 0;
+            margin: 0 auto;
+            padding-top: 0;
+            padding-bottom: 0;
+            border-color: transparent;
+            pointer-events: none;
+        }
+
+        .oak-map-onboarding {
+            position: absolute;
+            inset: 0;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.25rem;
+            background: rgba(250, 251, 250, 0.92);
+            border-radius: var(--oak-radius-lg);
+            text-align: center;
+            max-width: 512px;
+            margin: 0 auto;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .oak-map-onboarding[hidden] {
+            display: none !important;
+        }
+
+        .oak-map-onboarding-icon {
+            font-size: 2.5rem;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .oak-map-stage {
+            position: relative;
+            width: 100%;
+            max-width: 512px;
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div>
+            <img src="./img/oakspoke-logo-200px.png" alt="Oakspoke Logo">
+        </div>
+        <div class="mt-3"></div>
+
+        <ul class="nav-tabs" id="OakspokeTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="map-tab" data-toggle="tab" href="#map" role="tab" aria-controls="map" aria-selected="true">Claim</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="send-tab" data-toggle="tab" href="#send" role="tab" aria-controls="send" aria-selected="false">Send</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="feed-tab" data-toggle="tab" href="#feed" role="tab" aria-controls="feed" aria-selected="false">History</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="about-tab" data-toggle="tab" href="#about" role="tab" aria-controls="about" aria-selected="false">About</a>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="oakspokeTabContent">
+            <!-- CLAIM TAB (panel id=map) — map + claim only (search lives under History) -->
+            <div class="tab-pane active" id="map" role="tabpanel" aria-labelledby="map-tab">
+                <div class="d-flex flex-column align-items-center map-tab-main" style="position: relative;">
+                <div id="mapTapHint" class="map-tap-hint" role="status" aria-live="polite">Tap the map to choose where to claim your Oakspoke location.</div>
+                <div id="claimMapStage" class="oak-map-stage my-3">
+                    <div id="mapOnboardingOverlay" class="oak-map-onboarding" hidden>
+                        <div class="oak-map-onboarding-icon" aria-hidden="true">👆</div>
+                        <p style="margin-bottom: 0.75rem; font-weight: 600; color: var(--oak-text);">Choose your spot</p>
+                        <p class="small" style="margin-bottom: 1rem; color: var(--oak-text-secondary); max-width: 280px;">Tap anywhere on the map to pick coordinates.</p>
+                        <button type="button" class="btn btn-primary" id="mapOnboardingDismissBtn">Got it</button>
+                    </div>
+                    <div id="oakspokeMapWrap" class="oakspoke-map-wrap oakspoke-map-wrap--pulse d-flex justify-content-center">
+                        <canvas id="oakspokeMap" width="512" height="512" style="border:1px solid #ccc; background:#f8f9fa;"></canvas>
+                    </div>
+                </div>
+                <button type="button" id="claimLocationBtn" class="btn btn-outline-secondary mb-3" disabled>Select a location on the map</button>
+
+                <div id="congratulationsMessage" style="display: none; margin-top: 20px; width: 100%; max-width: 560px;">
+                    <h5 class="oak-claim-celebrate-title mb-0">Success! This location is yours.</h5>
+                </div>
+
+                <div class="mt-3" id="geoKeyContainer" style="display: none; width: 100%; max-width: 560px;">
+                    <div id="geoKeyPreSaveSection">
+                    <div class="geo-key-claim-public-block mb-3">
+                        <span class="geo-key-claim-public-label">Your public address:</span>
+                        <div id="geoKeyClaimPublicAddress" class="geo-key-claim-public-address font-monospace" aria-live="polite"></div>
+                    </div>
+                    <form id="claimGeoKeyCredentialsForm" autocomplete="on">
+                        <div class="form-group">
+                            <label for="username">Location Nick Name</label>
+                            <input type="text" class="form-control font-monospace" id="username" name="username" autocomplete="username" spellcheck="false" tabindex="0">
+                        </div>
+                        <div class="form-group mb-2">
+                            <label for="geoKey">GeoKey Password</label>
+                            <p class="geo-key-password-hint">The GeoKey is your proof of ownership for this map position and cannot be recovered if lost.</p>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="geoKey" name="password" autocomplete="new-password" spellcheck="false">
+                                <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" id="geoKeyClaimToggleBtn" title="Show/Hide GeoKey"
+                            onclick="
+                              const inp = document.getElementById('geoKey');
+                              const isHidden = inp.type === 'password';
+                              inp.type = isHidden ? 'text' : 'password';
+                              this.innerHTML = isHidden ? `
+                                <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24'
+                                     fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>
+                                  <path d='M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94'/>
+                                  <path d='M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19'/>
+                                  <line x1='1' y1='1' x2='23' y2='23'/>
+                                </svg>` : `
+                                <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24'
+                                     fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>
+                                  <path d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z'/>
+                                  <circle cx='12' cy='12' r='3'/>
+                                </svg>`;
+                            ">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                              <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            </button>
+                                    <input type="file" accept="application/json" id="geoKeyFileInput" style="display: none;" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="my-1">
+                            <button class="btn btn-save" id="copyGeoCode" type="submit">
+                                Save GeoKey Password <span class="icon-save"></span>
+                            </button>
+                        </div>
+                    </form>
+                    <div id="qrCodeContainer" style="margin: 1rem 0; text-align: center;">
+                        <img id="geoKeyQR" style="max-width: 200px;">
+                    </div>
+                    <div class="alert alert-warning">
+                        <strong>Important:</strong> Save the GeoKey file to a secure location you control.
+                    </div>
+                    </div>
+                </div>
+
+                <div id="geoKeySavedSection" class="geo-key-saved-plain" style="display: none; width: 100%; max-width: 560px;">
+                    <p id="geoKeySavedHeading" class="geo-key-saved-plain-title mb-3" tabindex="-1" role="status">GeoCode Password Saved</p>
+                    <span class="geo-key-saved-location-label">Your public address:</span>
+                    <div class="geo-key-saved-address-copy-row mb-3">
+                        <div id="geoKeySavedLocation" class="font-monospace geo-key-saved-location-address"></div>
+                        <button type="button" class="btn btn-sm btn-outline-secondary geo-key-copy-address-btn" id="geoKeyCopyPublicAddressBtn" disabled title="Copy public address" aria-label="Copy public address to clipboard">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                        </button>
+                    </div>
+                    <p class="geo-key-saved-sub mb-2">To send &amp; receive acoorns — scan the QR or use Share public link:</p>
+                    <div class="geo-key-saved-share-qr-block">
+                        <button type="button" class="btn btn-outline-primary geo-key-share-btn" id="geoKeyShareLocationBtn" aria-label="Share your public Oakspoke send link (not your GeoKey)." title="Copies or shares https://oakspoke.com/#send/… — never your GeoKey">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                            <span class="geo-key-share-btn-label">Share public link</span>
+                        </button>
+                        <div id="geoKeySavedLocationQR" class="text-center"></div>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            <!-- SEND TAB -->
+            <div class="tab-pane" id="send" role="tabpanel" aria-labelledby="send-tab">
+                <div id="sendFormContainer">
+                    <form id="sendForm">
+                        <div class="form-group">
+                            <label for="destination">To</label>
+                            <input type="text" class="form-control font-monospace" id="destination" placeholder="X:53.048f811ff51_Y:218.ab02eed7ee5" autocomplete="off" spellcheck="false"
+                                autocorrect="off" autocapitalize="off"
+                                data-lpignore="true"
+                                data-1p-ignore="true"
+                                data-bwignore="true">
+                            <div id="destinationbalance" style="margin: 10px 0;"></div>
+                            <div id="destLatLong" class="send-dest-latlong"><small></small></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="amount">How Much?</label>
+                            <input type="number" class="form-control" id="amount" placeholder="Enter amount" min="1" step="1" inputmode="numeric"
+                                autocomplete="transaction-amount"
+                                data-lpignore="true"
+                                data-1p-ignore="true"
+                                data-bwignore="true"
+                                oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                        </div>
+                        <div class="form-group">
+                            <label for="msg">Emoji Memo</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="msg" maxlength="32" placeholder="📝💬➡️" autocomplete="off">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" id="emojiPickerBtn" title="Select emoji">
+                                        🐿️
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="emojiPickerContainer" style="position: relative; display: none; margin-top: 5px;">
+                                <emoji-picker id="emojiPicker"></emoji-picker>
+                            </div>
+                        </div>
+                        <div class="form-group position-relative">
+                            <label for="geoKeySend">GeoKey</label>
+                            <input type="text" id="sendPasswordManagerUsername" name="acoor_origin_location" class="send-pm-username-slot" autocomplete="username" readonly tabindex="-1" aria-hidden="true" value="">
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="geoKeySend" autocomplete="current-password" placeholder="Upload GeoKey...">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" id="geoKeyToggleBtn" title="Show/Hide GeoKey"
+                                    onclick="
+                                      const inp = document.getElementById('geoKeySend');
+                                      const isHidden = inp.type === 'password';
+                                      inp.type = isHidden ? 'text' : 'password';
+                                      this.innerHTML = isHidden ? `
+                                        <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24'
+                                             fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>
+                                          <path d='M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94'/>
+                                          <path d='M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19'/>
+                                          <line x1='1' y1='1' x2='23' y2='23'/>
+                                        </svg>` : `
+                                        <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24'
+                                             fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>
+                                          <path d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z'/>
+                                          <circle cx='12' cy='12' r='3'/>
+                                        </svg>`;
+                                    ">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                      <circle cx="12" cy="12" r="3"/>
+                                    </svg>
+                                  </button>
+                                    <button class="btn btn-outline-secondary" type="button" id="geoKeySendFileBtn" title="Load GeoKey from file">
+                                        <span class="icon-folder"></span>
+                                    </button>
+                                    <input type="file" accept="application/json" id="geoKeySendFileInput" style="display: none;" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="balance" style="margin: 10px 0;"></div>
+                        <button type="button" class="btn btn-primary" id="sendButton">Send</button>
+                    </form>
+                </div>
+
+                <!-- Loading Animation -->
+                <div id="sendLoadingContainer" style="display: none; text-align: center; padding: 50px;">
+                    <div class="spinner" style="display: inline-block; width: 50px; height: 50px; border-width: 5px;"></div>
+                    <h4 style="margin-top: 20px;">Processing Transaction...</h4>
+                </div>
+
+                <!-- Transaction Results -->
+                <div id="sendResultsContainer" style="display: none;">
+                    <h4>Transaction Report</h4>
+                    <div class="card">
+                        <div class="card-body">
+                            <p id="resultOutcome" class="transaction-report-outcome" role="status" aria-live="polite"></p>
+                            <p><strong>Origin:</strong> <span id="resultOrigin"></span></p>
+                            <p><strong>Origin Balance:</strong> <span id="resultOriginBalance"></span></p>
+                            <p><strong>Destination:</strong> <span id="resultDestination"></span></p>
+                            <p><strong>Destination Balance:</strong> <span id="resultDestBalance"></span></p>
+                            <p><strong>Amount:</strong> <span id="resultAmount"></span></p>
+                            <p><strong>Memo:</strong> <span id="resultMsg"></span></p>
+                            <hr>
+                            <p class="mb-2">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" id="toggleResultStatusBtn" aria-expanded="false" aria-controls="resultStatusPanel">Show technical details</button>
+                            </p>
+                            <div id="resultStatusPanel" style="display: none;">
+                                <p><strong>Transaction Validation Checklist:</strong></p>
+                                <pre id="resultStatus"></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HISTORY TAB (ledger + location search, panel id=feed) -->
+            <div class="tab-pane" id="feed" role="tabpanel" aria-labelledby="feed-tab">
+                <form class="mb-3 mt-3" id="mapLocationSearchForm" autocomplete="off" onsubmit="return false;" aria-label="Location search">
+                    <div class="input-group">
+                        <input type="search"
+                            class="form-control"
+                            id="inspectLocationInput"
+                            name="oakspokeMapSearch"
+                            placeholder="N:132.5b332..._E:46.37f32..."
+                            autocomplete="off"
+                            autocorrect="off"
+                            autocapitalize="off"
+                            spellcheck="false"
+                            data-lpignore="true"
+                            data-1p-ignore
+                            data-bwignore
+                            aria-label="Oakspoke address or lat/long lookup">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-primary" type="button" id="lookupButton">
+                                <span class="icon-search"></span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <div id="latLongBalanceContainer" style="display: none;">
+                    <div id="balanceInfo"></div>
+                    <div id="latLongInfo" aria-label="Approximate latitude and longitude"></div>
+                    <div class="text-center mt-2 mb-2">
+                        <button type="button" class="btn btn-outline-primary geo-key-share-btn" id="historyLookupShareBtn" aria-label="Share public Oakspoke send link for this address (not a GeoKey)." title="Copies or shares https://oakspoke.com/#send/…">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                            <span class="geo-key-share-btn-label">Share public link</span>
+                        </button>
+                    </div>
+                    <div id="locationQR" style="margin-top: 10px; text-align: center;"></div>
+                </div>
+
+                <h4 class="mt-3">History</h4>
+                <small><button type="button" class="btn btn-sm btn-outline-secondary" id="toggleBlockDetailBtn" aria-pressed="false">Show block detail</button></small>
+                <hr>
+                <div id="blockchainContainer" role="region" aria-label="Transaction history" aria-busy="true">
+                    <div class="oak-history-loading" role="status" aria-live="polite">
+                        <div class="oak-history-spinner" aria-hidden="true"></div>
+                        <p class="oak-history-loading-text mb-0">Loading history…</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ABOUT TAB -->
+            <div class="tab-pane" id="about" role="tabpanel" aria-labelledby="about-tab">
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="content">
+                                    <p>Oakspoke is an experiment.</p>
+                                    <div style="border: 1px solid #ccc; border-radius: 8px; background-color: #f5f5f5; padding: 16px; margin: 16px 0;">
+                                        <h4>The Oakspoke Hypothesis:</h4>
+                                        <blockquote style="margin-bottom: 0;">"Given the right social conditions, Participant A will accept acoorn from Participant B in exchange for a beer."</blockquote>
+                                    </div>
+                                    
+                                    <h4>How It Works</h4>
+                                    <p><strong>Claim a spot on the map</strong><br>
+                                    Pick a location. That's your home on the Oakspoke network.</p>
+                                    
+                                    <p><strong>Send and receive acoorns</strong><br>
+                                    Exchange acoorns with people at other locations.</p>
+                                    
+                                    <p><strong>Run a forager</strong><br>
+                                    A forager is a small, independent robot that checks the ledger to ensure everything is accurate and consistent. Run one, and you earn acoorns for helping keep the system honest.</p>
+                                    
+                                    <h4>What Oakspoke Is (and Isn't)</h4>
+                                    <ul>
+                                        <li>Not a get-rich-quick crypto scheme</li>
+                                        <li>Not backed by promises or hype</li>
+                                        <li>Just a simple system designed to see what happens when people decide something has value</li>
+                                    </ul>
+                                    
+                                    <p style="font-size: 1.2em; font-weight: bold; margin-top: 20px;">Can a $20 Arduino replace a power-hungry mining operation?</p>
+                                    <div style="text-align: center; margin-top: 24px;">
+                                        <img src="img/forager.png" alt="Forager Prototype" style="border: 1px solid #ccc; max-width: 75%; margin-bottom: 8px;">
+                                        <div style="font-size: 14px; color: #666; margin-top: 3px;">
+                                            Simple working prototype (costs about $50 to build). This forager is now foraging and earning acoorn rewards at location X:75.332aef674c6_Y:159.44684f14f94 (lat/long: 40°57'06"N 73°41'47"W)
+                                        </div>
+                                    </div>
+                                    <div style="text-align: center; margin-top: 24px;">
+                                        <img src="img/forager1_0_1.png" alt="Forager Prototype 1.0.1" style="border: 1px solid #ccc; max-width: 75%; margin-bottom: 8px;">
+                                        <div style="font-size: 14px; color: #666; margin-top: 3px;">
+                                            Prototype 1.0.5. This forager is now doing real work auditing the Oakspoke network. It also maintins a local local copy of the Oakspoke blockchain for security and redundancy.
+                                        </div>
+                                    </div>
+                                
+
+                                    <img src="img/squirrel.png" alt="squirrel" style="margin-top: 10px;">
+
+                                    <div style="text-align: center; margin-top: 24px;">
+                                        <a href="store.html" class="btn btn-primary btn-lg">Oakspoke Store</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-4">
+            <p><small>OAKSPOKE<br> Claim. Send. Receive.</small></p>
+            <p><small id="version"></small><small> © 2026 MSP <a href="https://github.com/mayosmith/oakspoke">https://github.com/mayosmith/oakspoke</a></small></p>
+        </footer>
+    </div>
+
+    <script type="module">
+        import * as utilities from './js/oakspoke-client.js?v=11';
+        
+        const DEFAULT_NODE_ENDPOINT = "[DEFAULT_ENDPOINT]";
+        const DEFAULT_TX_ENDPOINT = "[DEFAULT_ENDPOINT]/process-transaction";
+        const DEFAULT_BALANCE_ENDPOINT = "[DEFAULT_ENDPOINT]/balance";
+        /** Public page URL encoded in QR + share (hash send route). */
+        const OAKSPOKE_PUBLIC_SEND_BASE = '[DEFAULT_URL]/#send/';
+
+        const canvas = document.getElementById('oakspokeMap');
+        const ctx = canvas.getContext('2d');
+        const backgroundImage = new Image();
+        backgroundImage.src = './img/map-512.png';
+
+        const MAP_WIDTH = utilities.getMapDimensions().width;
+        const MAP_HEIGHT = utilities.getMapDimensions().height;
+        const PIN_WIDTH = 40;
+        const PIN_HEIGHT = 64;
+        const PIN_MARGIN = 70;
+        const SCALE_FACTOR = 2;
+        var _pendingClaim = false;  // true after map pick or claim-related inspect
+        var _pendingClaimCoords = null;  // { x, y } integers — GeoKey generated on Claim only
+        /** Grid cells ({x,y} integers) for first N balance keys — drawn as dots on the map. */
+        var _balanceDotCells = [];
+        var BALANCE_DOT_COUNT = 50;
+        var BALANCE_DOT_RADIUS = 3;
+
+        async function loadBalanceDotCells() {
+            _balanceDotCells = [];
+            try {
+                var data = await utilities.getBalances();
+                var bal = data && data.balances;
+                if (!bal || typeof bal !== 'object') return;
+                var keys = Object.keys(bal).sort();
+                for (var i = 0; i < keys.length && _balanceDotCells.length < BALANCE_DOT_COUNT; i++) {
+                    var p = parseAddressString(keys[i]);
+                    if (p && !Number.isNaN(p.x) && !Number.isNaN(p.y)) {
+                        _balanceDotCells.push({ x: p.x, y: p.y });
+                    }
+                }
+            } catch (e) {
+                console.warn('Could not load balances for map dots:', e);
+            }
+        }
+
+        function drawBalanceLocationDots() {
+            if (!_balanceDotCells.length) return;
+            ctx.save();
+            ctx.fillStyle = 'rgba(196, 92, 42, 0.9)';
+            for (var i = 0; i < _balanceDotCells.length; i++) {
+                var cell = _balanceDotCells[i];
+                var cx = cell.x * SCALE_FACTOR + SCALE_FACTOR / 2;
+                var cy = (MAP_HEIGHT * SCALE_FACTOR) - cell.y * SCALE_FACTOR - SCALE_FACTOR / 2;
+                ctx.beginPath();
+                ctx.arc(cx, cy, BALANCE_DOT_RADIUS, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            ctx.restore();
+        }
+
+        async function reDrawMap(xp, yp) {
+            ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+            drawBalanceLocationDots();
+            if (oakPrimeCoords) {
+                drawOakPin(oakPrimeCoords.x, oakPrimeCoords.y);
+            }
+            if (typeof xp === 'number' && typeof yp === 'number' && !Number.isNaN(xp) && !Number.isNaN(yp)) {
+                drawPin(xp, yp);
+            }
+        }
+
+        function claimButtonLabelForAddress(addressStr) {
+            if (!addressStr) return 'Claim this location';
+            var parsed = parseAddressString(addressStr);
+            if (!parsed) return 'Claim location';
+            return 'Claim ' + parsed.x + ',' + parsed.y;
+        }
+
+        /** Password-manager / default nick: MyLocation_{x}_{y} grid integers from full address */
+        function claimedLocationUsernameFromAddress(addressStr) {
+            if (!addressStr) return '';
+            var parsed = parseAddressString(addressStr);
+            if (!parsed) return '';
+            return 'MyLocation_' + parsed.x + '_' + parsed.y;
+        }
+
+        /** Single segment for download= (no path); Windows-forbidden: \\ / : * ? " < > | */
+        function sanitizeWindowsFileNameBase(raw) {
+            if (raw == null || typeof raw !== 'string') return 'GeoKey';
+            var s = raw.replace(/[\u0000-\u001F\u007F]/g, '');
+            s = s.replace(/[/\\:*?"<>|]/g, '-');
+            s = s.replace(/^\.+/, '').replace(/\.+$/, '').trim();
+            if (!s) return 'GeoKey';
+            var upper = s.toUpperCase();
+            var reserved = { CON: 1, PRN: 1, AUX: 1, NUL: 1 };
+            for (var i = 1; i <= 9; i++) {
+                reserved['COM' + i] = 1;
+                reserved['LPT' + i] = 1;
+            }
+            if (reserved[upper]) s = s + '_key';
+            return s;
+        }
+
+        function getClaimedLocationShareUrl() {
+            var el = document.getElementById('geoKeySavedLocation');
+            var addr = el && el.textContent ? el.textContent.trim() : '';
+            if (!addr || addr === '—') return '';
+            return OAKSPOKE_PUBLIC_SEND_BASE + addr;
+        }
+
+        async function copyGeoKeySavedPublicAddress() {
+            var el = document.getElementById('geoKeySavedLocation');
+            var text = el && el.textContent ? el.textContent.trim() : '';
+            if (!text || text === '—') {
+                alert('Nothing to copy.');
+                return;
+            }
+            var btn = document.getElementById('geoKeyCopyPublicAddressBtn');
+            var clipboardSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+            var checkSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
+            var showCopied = function() {
+                if (!btn) return;
+                btn.innerHTML = checkSvg;
+                btn.title = 'Copied!';
+                btn.setAttribute('aria-label', 'Copied to clipboard');
+                btn.disabled = true;
+                setTimeout(function() {
+                    btn.innerHTML = clipboardSvg;
+                    btn.title = 'Copy public address';
+                    btn.setAttribute('aria-label', 'Copy public address to clipboard');
+                    btn.disabled = false;
+                }, 2000);
+            };
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(text);
+                    showCopied();
+                    return;
+                }
+            } catch (_) { /* fall through */ }
+            try {
+                var ta = document.createElement('textarea');
+                ta.value = text;
+                ta.setAttribute('readonly', '');
+                ta.style.position = 'fixed';
+                ta.style.left = '-9999px';
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                showCopied();
+            } catch (e2) {
+                alert('Could not copy. Select the address and copy manually.');
+            }
+        }
+
+        async function shareClaimedOakspokeLocation() {
+            var shareUrl = getClaimedLocationShareUrl();
+            if (!shareUrl) {
+                alert('No location to share.');
+                return;
+            }
+            var btn = document.getElementById('geoKeyShareLocationBtn');
+            var label = btn && btn.querySelector('.geo-key-share-btn-label');
+            var showCopied = function() {
+                if (!label) return;
+                var prev = label.textContent;
+                label.textContent = 'Link copied!';
+                if (btn) btn.disabled = true;
+                setTimeout(function() {
+                    label.textContent = prev;
+                    if (btn) btn.disabled = false;
+                }, 2000);
+            };
+            if (navigator.share) {
+                try {
+                    await navigator.share({ url: shareUrl });
+                    return;
+                } catch (err) {
+                    if (err && err.name === 'AbortError') return;
+                }
+            }
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                try {
+                    await navigator.clipboard.writeText(shareUrl);
+                    showCopied();
+                    return;
+                } catch (_) { /* fall through */ }
+            }
+            try {
+                var ta = document.createElement('textarea');
+                ta.value = shareUrl;
+                ta.setAttribute('readonly', '');
+                ta.style.position = 'fixed';
+                ta.style.left = '-9999px';
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                showCopied();
+            } catch (e2) {
+                window.prompt('Copy link:', shareUrl);
+            }
+        }
+
+        function getHistoryLookupShareUrl() {
+            var el = document.getElementById('inspectLocationInput');
+            var addr = el && el.value ? el.value.trim() : '';
+            if (!addr || !parseAddressString(addr)) return '';
+            return OAKSPOKE_PUBLIC_SEND_BASE + addr;
+        }
+
+        async function shareHistoryLookupPublicLink() {
+            var shareUrl = getHistoryLookupShareUrl();
+            if (!shareUrl) {
+                alert('No valid looked-up address to share. Use Lookup first.');
+                return;
+            }
+            var btn = document.getElementById('historyLookupShareBtn');
+            var label = btn && btn.querySelector('.geo-key-share-btn-label');
+            var showCopied = function() {
+                if (!label) return;
+                var prev = label.textContent;
+                label.textContent = 'Link copied!';
+                if (btn) btn.disabled = true;
+                setTimeout(function() {
+                    label.textContent = prev;
+                    if (btn) btn.disabled = false;
+                }, 2000);
+            };
+            if (navigator.share) {
+                try {
+                    await navigator.share({ url: shareUrl });
+                    return;
+                } catch (err) {
+                    if (err && err.name === 'AbortError') return;
+                }
+            }
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                try {
+                    await navigator.clipboard.writeText(shareUrl);
+                    showCopied();
+                    return;
+                } catch (_) { /* fall through */ }
+            }
+            try {
+                var ta = document.createElement('textarea');
+                ta.value = shareUrl;
+                ta.setAttribute('readonly', '');
+                ta.style.position = 'fixed';
+                ta.style.left = '-9999px';
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                showCopied();
+            } catch (e2) {
+                window.prompt('Copy link:', shareUrl);
+            }
+        }
+
+        function setClaimLocationButtonIdle() {
+            var btn = document.getElementById('claimLocationBtn');
+            if (!btn) return;
+            btn.disabled = true;
+            btn.classList.remove('btn-outline-primary');
+            btn.classList.add('btn-outline-secondary');
+            btn.textContent = 'Select a location on the map';
+            _pendingClaimCoords = null;
+        }
+
+        function setClaimLocationButtonReady(addressStr) {
+            var btn = document.getElementById('claimLocationBtn');
+            if (!btn) return;
+            btn.disabled = false;
+            btn.classList.remove('btn-outline-secondary');
+            btn.classList.add('btn-outline-primary');
+            btn.textContent = claimButtonLabelForAddress(addressStr);
+        }
+
+        function setClaimLocationButtonPendingCoords(x, y) {
+            var btn = document.getElementById('claimLocationBtn');
+            if (!btn) return;
+            btn.disabled = false;
+            btn.classList.remove('btn-outline-secondary');
+            btn.classList.add('btn-outline-primary');
+            btn.textContent = 'Claim ' + x + ',' + y;
+        }
+
+        function setClaimLocationButtonGeoKeyStep() {
+            var btn = document.getElementById('claimLocationBtn');
+            if (!btn) return;
+            btn.disabled = true;
+            btn.classList.remove('btn-outline-primary');
+            btn.classList.add('btn-outline-secondary');
+            btn.textContent = 'Complete GeoKey steps below';
+        }
+
+        function dismissMapInteractionHints() {
+            var wrap = document.getElementById('oakspokeMapWrap');
+            if (wrap) {
+                wrap.classList.remove('oakspoke-map-wrap--pulse');
+                wrap.classList.remove('oakspoke-map-wrap--show-fake-tap');
+            }
+            var hint = document.getElementById('mapTapHint');
+            if (hint && !sessionStorage.getItem('oakspoke_v2_map_tap_hint_dismissed')) {
+                hint.classList.add('map-tap-hint--dismissed');
+                sessionStorage.setItem('oakspoke_v2_map_tap_hint_dismissed', '1');
+            }
+        }
+
+        function dismissMapOnboardingOverlay() {
+            var ov = document.getElementById('mapOnboardingOverlay');
+            if (ov) ov.hidden = true;
+            localStorage.setItem('oakspoke_v2_map_onboarding_done', '1');
+        }
+
+        function scheduleFakeTapHint() {
+            if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) return;
+            if (sessionStorage.getItem('oakspoke_v2_fake_tap_done')) return;
+            var wrap = document.getElementById('oakspokeMapWrap');
+            if (!wrap) return;
+            sessionStorage.setItem('oakspoke_v2_fake_tap_done', '1');
+            setTimeout(function() {
+                wrap.classList.add('oakspoke-map-wrap--show-fake-tap');
+                setTimeout(function() {
+                    wrap.classList.remove('oakspoke-map-wrap--show-fake-tap');
+                }, 2200);
+            }, 500);
+        }
+
+        function maybeShowMapOnboarding() {
+            var ov = document.getElementById('mapOnboardingOverlay');
+            if (!ov) return;
+            if (localStorage.getItem('oakspoke_v2_map_onboarding_done')) {
+                scheduleFakeTapHint();
+                return;
+            }
+            ov.hidden = false;
+        }
+
+        function updateGeoKeyClaimPublicAddressDisplay(addressStr) {
+            var el = document.getElementById('geoKeyClaimPublicAddress');
+            if (!el) return;
+            var s = addressStr != null ? String(addressStr).trim() : '';
+            el.textContent = s;
+        }
+
+        function resetMapClaimSelectionAfterSave() {
+            _pendingClaim = false;
+            _pendingClaimCoords = null;
+            document.getElementById('inspectLocationInput').value = '';
+            document.getElementById('geoKey').value = '';
+            var claimUserEl = document.getElementById('username');
+            if (claimUserEl) claimUserEl.value = '';
+            updateGeoKeyClaimPublicAddressDisplay('');
+            reDrawMap();
+            setClaimLocationButtonIdle();
+        }
+
+        /** After GeoKey is generated: fill form, redraw pin, refresh balance/latlong (no congratulations UI). */
+        async function applyStakedGeoKeyToForm(myGeoKey) {
+            if (!myGeoKey) {
+                alert('Could not claim that map position.');
+                return false;
+            }
+            var addressStr = myGeoKey.location;
+
+            if (!addressStr) {
+                alert('Please enter an address');
+                return false;
+            }
+
+            var parsedAddress = parseAddressString(addressStr);
+            if (!parsedAddress) {
+                alert('Invalid address format. Expected: X:53.048f811ff51_Y:218.ab02eed7ee5. Got: ' + addressStr);
+                return false;
+            }
+
+            document.getElementById('inspectLocationInput').value = addressStr;
+            document.getElementById('geoKey').value = JSON.stringify(myGeoKey);
+            updateGeoKeyClaimPublicAddressDisplay(addressStr);
+            var claimUserEl = document.getElementById('username');
+            if (claimUserEl) claimUserEl.value = claimedLocationUsernameFromAddress(addressStr);
+            resetGeoKeySaveUI();
+
+            await reDrawMap(parsedAddress.x, parsedAddress.y);
+            await updateBalanceDisplay(addressStr);
+            await updateLatLongDisplay(addressStr);
+
+            document.getElementById('congratulationsMessage').style.display = 'none';
+            document.getElementById('geoKeyContainer').style.display = 'none';
+            document.getElementById('geoKeySavedSection').style.display = 'none';
+            return true;
+        }
+
+        /** Map tap: only pin + Claim x,y — keys are created when Claim is pressed. */
+        async function selectClaimMapPoint(mx, my) {
+            var xi = Math.floor(mx);
+            var yi = Math.floor(my);
+            if (xi < 0) xi = 0;
+            if (xi > 255) xi = 255;
+            if (yi < 0) yi = 0;
+            if (yi > 255) yi = 255;
+
+            _pendingClaimCoords = { x: xi, y: yi };
+            _pendingClaim = true;
+
+            document.getElementById('inspectLocationInput').value = '';
+            document.getElementById('geoKey').value = '';
+            var claimUserEl = document.getElementById('username');
+            if (claimUserEl) claimUserEl.value = '';
+            updateGeoKeyClaimPublicAddressDisplay('');
+            resetGeoKeySaveUI();
+
+            /* Button + light DOM first: reDrawMap does a full-canvas drawImage and was delaying the label. */
+            setClaimLocationButtonPendingCoords(xi, yi);
+            dismissMapInteractionHints();
+            document.getElementById('congratulationsMessage').style.display = 'none';
+            document.getElementById('geoKeyContainer').style.display = 'none';
+            document.getElementById('geoKeySavedSection').style.display = 'none';
+
+            await reDrawMap(xi, yi);
+        }
+
+        var locations = [];
+        var pinBwImage = new Image();
+        pinBwImage.src = './img/pinBw-sm.png';
+
+        var pinImage = new Image();
+        pinImage.src = './img/pin.png';
+
+        var oakPinImage = new Image();
+        oakPinImage.src = './img/oakpin.png';
+        var oakPrimeCoords = null; // Stores {x, y} of oakPrime from block
+
+        // Start block fetch immediately (runs in parallel with image load)
+        var blockPromise = utilities.getBlock();
+
+        var _historySummaryHtml = '';
+        var _historyViewIsBlockDetail = false;
+
+        function updateToggleBlockDetailButton() {
+            var btn = document.getElementById('toggleBlockDetailBtn');
+            if (!btn) return;
+            btn.textContent = _historyViewIsBlockDetail ? 'Show transaction history' : 'Show block detail';
+            btn.setAttribute('aria-pressed', _historyViewIsBlockDetail ? 'true' : 'false');
+        }
+
+        backgroundImage.onload = async function() {
+            // Show the map immediately so canvas isn't blank while loading
+            ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+
+            var ablockBundle = await blockPromise;
+
+            // Parse oakPrime location from block
+            if (ablockBundle.oakPrime) {
+                var oakPrimeParsed = parseAddressString(ablockBundle.oakPrime);
+                if (oakPrimeParsed) {
+                    oakPrimeCoords = { x: oakPrimeParsed.x, y: oakPrimeParsed.y };
+                    console.log('OakPrime location:', oakPrimeCoords);
+                }
+            }
+
+            await loadBalanceDotCells();
+
+            /* User may have tapped the map while blockPromise was in flight; redraw must keep their pin. */
+            if (_pendingClaimCoords) {
+                await reDrawMap(_pendingClaimCoords.x, _pendingClaimCoords.y);
+                _pendingClaim = true;
+                setClaimLocationButtonPendingCoords(_pendingClaimCoords.x, _pendingClaimCoords.y);
+            } else {
+                await reDrawMap();
+                setClaimLocationButtonIdle();
+                _pendingClaim = false;
+            }
+            maybeShowMapOnboarding();
+
+            var version = utilities.VERSION;
+            document.getElementById('version').innerHTML = version + ' · UI v2';
+        };
+
+        async function updateBalanceDisplay(addressStr) {
+            const balance = await utilities.getBalance(addressStr);
+            document.getElementById('balanceInfo').innerHTML = "Acoorn Balance: " + balance;
+        }
+
+        async function updateLatLongDisplay(addressStr) {
+            const latLong = utilities.getLatLong(addressStr);
+            if (!latLong) return;
+
+            document.getElementById('latLongInfo').innerHTML = utilities.formatLatLong(latLong);
+        }
+
+        async function toggleBlockDetailView() {
+            var container = document.getElementById('blockchainContainer');
+            if (!container) return;
+
+            if (_historyViewIsBlockDetail) {
+                container.innerHTML = _historySummaryHtml;
+                container.scrollTop = 0;
+                _historyViewIsBlockDetail = false;
+                updateToggleBlockDetailButton();
+                return;
+            }
+
+            const currentBlock = await utilities.getBlock();
+            const currentBlockNumber = currentBlock.block;
+            console.log('Current block number: ' + currentBlockNumber);
+
+            const blocks = [];
+            for (let i = 0; i < 3; i++) {
+                const blockNum = currentBlockNumber - i;
+                if (blockNum >= 0) {
+                    try {
+                        const block = i === 0 ? currentBlock : await utilities.getBlock(blockNum);
+                        blocks.push(block);
+                    } catch (e) {
+                        console.log('Block ' + blockNum + ' not found');
+                    }
+                }
+            }
+
+            let html = '';
+            blocks.forEach(function(block) {
+                html += '<div style="border: 1px solid #ddd; border-radius: 8px; padding: 12px; margin-bottom: 12px; background: #f9f9f9;">' +
+                    '<h5 style="margin: 0 0 8px 0;">Block #' + block.block + '</h5>' +
+                    '<pre style="margin: 0; font-size: 11px; overflow-x: auto;">' + JSON.stringify(block, null, 2) + '</pre>' +
+                    '</div>';
+            });
+
+            container.innerHTML = html || '<p>No blocks found</p>';
+            _historyViewIsBlockDetail = true;
+            updateToggleBlockDetailButton();
+        }
+
+        window.displayBlock = toggleBlockDetailView;
+        window.toggleBlockDetailView = toggleBlockDetailView;
+
+        function setResultStatusPanelVisible(visible) {
+            const panel = document.getElementById('resultStatusPanel');
+            const btn = document.getElementById('toggleResultStatusBtn');
+            if (!panel || !btn) return;
+            panel.style.display = visible ? 'block' : 'none';
+            btn.setAttribute('aria-expanded', visible ? 'true' : 'false');
+            btn.textContent = visible ? 'Hide technical details' : 'Show technical details';
+        }
+
+        document.getElementById('toggleResultStatusBtn')?.addEventListener('click', () => {
+            const panel = document.getElementById('resultStatusPanel');
+            const expanded = panel && panel.style.display !== 'none';
+            setResultStatusPanelVisible(!expanded);
+        });
+
+        document.getElementById('toggleBlockDetailBtn')?.addEventListener('click', function() {
+            toggleBlockDetailView();
+        });
+
+        function resetSendTabToCompose() {
+            const formEl = document.getElementById('sendFormContainer');
+            const loadingEl = document.getElementById('sendLoadingContainer');
+            const resultsEl = document.getElementById('sendResultsContainer');
+            const sendBtn = document.getElementById('sendButton');
+            if (formEl) formEl.style.display = 'block';
+            if (loadingEl) loadingEl.style.display = 'none';
+            if (resultsEl) resultsEl.style.display = 'none';
+            setResultStatusPanelVisible(false);
+            if (sendBtn) sendBtn.disabled = false;
+
+            const destInp = document.getElementById('destination');
+            if (destInp) destInp.value = '';
+            const amountInp = document.getElementById('amount');
+            if (amountInp) amountInp.value = '';
+            const msgInp = document.getElementById('msg');
+            if (msgInp) msgInp.value = '';
+            const geoInp = document.getElementById('geoKeySend');
+            if (geoInp) geoInp.value = '';
+
+            const bal = document.getElementById('balance');
+            if (bal) bal.innerHTML = '';
+            const destBalEl = document.getElementById('destinationbalance');
+            if (destBalEl) destBalEl.innerHTML = '';
+            const destLL = document.getElementById('destLatLong');
+            if (destLL) destLL.innerHTML = '<small></small>';
+
+            const emojiPickerContainer = document.getElementById('emojiPickerContainer');
+            if (emojiPickerContainer) emojiPickerContainer.style.display = 'none';
+
+            const geoFile = document.getElementById('geoKeySendFileInput');
+            if (geoFile) geoFile.value = '';
+
+            const outcome = document.getElementById('resultOutcome');
+            if (outcome) {
+                outcome.textContent = '';
+                outcome.className = 'transaction-report-outcome';
+            }
+            ['resultOrigin', 'resultOriginBalance', 'resultDestination', 'resultDestBalance', 'resultAmount', 'resultMsg'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = '';
+            });
+            const resultStatus = document.getElementById('resultStatus');
+            if (resultStatus) resultStatus.textContent = '';
+        }
+
+        async function sendTransaction() {
+            const sendButton = document.getElementById('sendButton');
+            sendButton.disabled = true;
+
+            try {
+                const geoKeyRaw = document.getElementById('geoKeySend').value;
+                const dest = document.getElementById('destination').value.trim();
+                const val = document.getElementById('amount').value;
+                const msgRaw = document.getElementById('msg').value;
+                const msg = msgRaw.replace(/,/g, ' ');
+
+                // Validate required fields with user-friendly messages
+                if (!geoKeyRaw || geoKeyRaw.trim() === '') {
+                    throw new Error("Please enter your GeoKey. This is required to sign the transaction.");
+                }
+                if (!dest || dest === '') {
+                    throw new Error("Please enter a destination address (e.g., X:53.048f811ff51_Y:218.ab02eed7ee5)");
+                }
+                if (!/^[A-Za-z0-9:._]+$/.test(dest)) {
+                    throw new Error("Destination address contains invalid characters. Only letters, numbers, colons, dots, and underscores are allowed.");
+                }
+                if (!val || val.trim() === '' || isNaN(parseInt(val, 10))) {
+                    throw new Error("Please enter a valid amount to send.");
+                }
+                const amount = parseInt(val, 10);
+                if (amount <= 0) {
+                    throw new Error("Amount must be greater than zero.");
+                }
+                if (amount !== parseFloat(val)) {
+                    throw new Error("Amount must be a whole number (no decimals).");
+                }
+
+                // Parse GeoKey - try JSON first, then extract fields if that fails
+                let geoKey;
+                try {
+                    geoKey = JSON.parse(geoKeyRaw.trim());
+                } catch (e) {
+                    // JSON parse failed - try to extract fields with regex
+                    console.log("JSON parse failed, attempting regex extraction...");
+                    const locationMatch = geoKeyRaw.match(/"location"\s*:\s*"([^"]+)"/);
+                    const privateKeyMatch = geoKeyRaw.match(/"privateKey"\s*:\s*"([^"]+)"/);
+                    const publicKeyMatch = geoKeyRaw.match(/"publicKey"\s*:\s*"([^"]+)"/);
+                    
+                    if (locationMatch && privateKeyMatch && publicKeyMatch) {
+                        geoKey = {
+                            location: locationMatch[1],
+                            privateKey: privateKeyMatch[1],
+                            publicKey: publicKeyMatch[1]
+                        };
+                        console.log("Successfully extracted GeoKey via regex");
+                    } else {
+                        throw new Error("Could not parse GeoKey. Found: location=" + !!locationMatch + ", privateKey=" + !!privateKeyMatch + ", publicKey=" + !!publicKeyMatch);
+                    }
+                }
+
+                if (!geoKey.location) {
+                    throw new Error("GeoKey is missing 'location' field. Please use a valid GeoKey.");
+                }
+                if (!geoKey.privateKey) {
+                    throw new Error("GeoKey is missing 'privateKey' field. Cannot sign transaction without it.");
+                }
+                if (!geoKey.publicKey) {
+                    throw new Error("GeoKey is missing 'publicKey' field. Please use a valid GeoKey.");
+                }
+
+                document.getElementById('sendFormContainer').style.display = 'none';
+                document.getElementById('sendLoadingContainer').style.display = 'block';
+
+                const txBundle = await utilities.createTxBundle(geoKey, dest, amount, msg);
+                console.log("txBundle:", JSON.stringify(txBundle, null, 2));
+
+                const response = await fetch(DEFAULT_TX_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(txBundle)
+                });
+
+                const responseText = await response.text();
+                let jsonResponse;
+                try {
+                    jsonResponse = JSON.parse(responseText);
+                } catch (e) {
+                    jsonResponse = { rawResponse: responseText };
+                }
+
+                console.log("Transaction response:", response.status, jsonResponse);
+
+                document.getElementById('sendLoadingContainer').style.display = 'none';
+                document.getElementById('sendResultsContainer').style.display = 'block';
+                setResultStatusPanelVisible(false);
+
+                const outcomeEl = document.getElementById('resultOutcome');
+                const ok = response.ok && jsonResponse.success !== false;
+
+                document.getElementById('resultOrigin').textContent = geoKey.location || 'Unknown';
+                document.getElementById('resultDestination').textContent = dest;
+                document.getElementById('resultAmount').textContent = val;
+                document.getElementById('resultMsg').textContent = msg;
+
+                if (ok) {
+                    outcomeEl.textContent = 'Transaction Successful';
+                    outcomeEl.className = 'transaction-report-outcome transaction-report-outcome--success';
+                } else {
+                    outcomeEl.textContent = 'Transaction Error';
+                    outcomeEl.className = 'transaction-report-outcome transaction-report-outcome--failure';
+                }
+
+                let originBalStr = '—';
+                let destBalStr = '—';
+                try {
+                    const [ob, db] = await Promise.all([
+                        utilities.getBalance(geoKey.location),
+                        utilities.getBalance(dest)
+                    ]);
+                    if (Number.isInteger(ob) && ob >= 0) originBalStr = String(ob);
+                    if (Number.isInteger(db) && db >= 0) destBalStr = String(db);
+                } catch (balErr) {
+                    console.warn('Balance refresh after transaction:', balErr);
+                }
+                document.getElementById('resultOriginBalance').textContent = originBalStr;
+                document.getElementById('resultDestBalance').textContent = destBalStr;
+
+                if (originBalStr !== '—') {
+                    document.getElementById('balance').innerHTML = "<span style='color: #0d6efd;'>Balance: " + originBalStr + "</span>";
+                }
+                if (destBalStr !== '—') {
+                    document.getElementById('destinationbalance').innerHTML = "<span style='color: #0d6efd;'>Balance: " + destBalStr + "</span>";
+                }
+
+                if (response.ok && jsonResponse.success !== false) {
+                    let prettyJsonStr = JSON.stringify(jsonResponse, null, 2)
+                        .replace(/"result":/gi, '<b>Result</b>:')
+                        .replace(/: true/gi, ': <span style="color:green;font-weight:bold;font-size:2em">✔</span>')
+                        .replace(/: false/gi, ': <span style="color:red;font-weight:bold;font-size:2em">✘</span>')
+                        .replace(/"checksum":/gi, '<b>Checksum</b>:')
+                        .replace(/"txN":/gi, '<b>Transaction Number</b>:')
+                        .replace(/"origin":/gi, '<b>Origin Address</b>:')
+                        .replace(/"destination":/gi, '<b>Destination</b>:')
+                        .replace(/"transactionHash":/gi, '<b>Transaction Hash</b>:')
+                        .replace(/"signature":/gi, '<b>Signature</b>:')
+                        .replace(/"previousHash":/gi, '<b>Previous Hash</b>:')
+                        .replace(/"balanceResult":/gi, '<b>Origin Balance</b>:')
+                        .replace(/"balance":/gi, '<b>Origin Account Balance</b>:')
+                        .replace(/"fee":/gi, '<b>Fee Paid</b>:');
+
+                    prettyJsonStr = prettyJsonStr.replace(/,\n/g, '\n');
+                    prettyJsonStr = prettyJsonStr.replace(/},\n\s*{/g, '},<br><hr><br>{');
+                    document.getElementById('resultStatus').innerHTML = "<pre>" + prettyJsonStr + "</pre>";
+                } else {
+                    // Simple error display for testing
+                    document.getElementById('resultStatus').innerHTML = `<pre>${JSON.stringify(jsonResponse, null, 2)}</pre>`;
+                }
+            } catch (error) {
+                console.error('Error in sendTransaction:', error);
+                document.getElementById('sendFormContainer').style.display = 'block';
+                document.getElementById('sendLoadingContainer').style.display = 'none';
+                document.getElementById('sendResultsContainer').style.display = 'block';
+                setResultStatusPanelVisible(false);
+
+                const outcomeEl = document.getElementById('resultOutcome');
+                outcomeEl.textContent = 'Transaction Error';
+                outcomeEl.className = 'transaction-report-outcome transaction-report-outcome--failure';
+
+                let originLoc = '—';
+                try {
+                    const raw = document.getElementById('geoKeySend').value.trim().replace(/[\u200B-\u200D\uFEFF]/g, '');
+                    if (raw) {
+                        const g = JSON.parse(raw);
+                        if (g && g.location) originLoc = g.location;
+                    }
+                } catch (_) { /* leave — */ }
+                document.getElementById('resultOrigin').textContent = originLoc;
+                document.getElementById('resultDestination').textContent = document.getElementById('destination').value.trim() || '—';
+                document.getElementById('resultAmount').textContent = document.getElementById('amount').value || '—';
+                document.getElementById('resultMsg').textContent = document.getElementById('msg').value.replace(/,/g, ' ') || '—';
+                document.getElementById('resultOriginBalance').textContent = '—';
+                document.getElementById('resultDestBalance').textContent = '—';
+
+                document.getElementById('resultStatus').innerHTML = `<pre>${error.message}\n\n${error.stack || ''}</pre>`;
+            } finally {
+                sendButton.disabled = false;
+            }
+        }
+
+        function drawPin(x, y) {
+            const canvasY = (MAP_HEIGHT * SCALE_FACTOR) - (y * SCALE_FACTOR);
+            ctx.drawImage(
+                pinImage,
+                (x * SCALE_FACTOR) - (PIN_WIDTH / 2),
+                canvasY - PIN_HEIGHT,
+                PIN_WIDTH,
+                PIN_HEIGHT
+            );
+        }
+
+        function drawOakPin(x, y) {
+            const canvasY = (MAP_HEIGHT * SCALE_FACTOR) - (y * SCALE_FACTOR);
+            ctx.drawImage(
+                oakPinImage,
+                (x * SCALE_FACTOR) - (PIN_WIDTH / 2),
+                canvasY - PIN_WIDTH,
+                PIN_WIDTH,
+                PIN_WIDTH
+            );
+        }
+
+        function setClaimMapChromeVisible(visible) {
+            var hint = document.getElementById('mapTapHint');
+            var stage = document.getElementById('claimMapStage');
+            var claimBtn = document.getElementById('claimLocationBtn');
+            if (hint) hint.style.display = visible ? '' : 'none';
+            if (stage) stage.style.display = visible ? '' : 'none';
+            if (claimBtn) claimBtn.style.display = visible ? '' : 'none';
+        }
+
+        function resetGeoKeySaveUI() {
+            const pre = document.getElementById('geoKeyPreSaveSection');
+            const saved = document.getElementById('geoKeySavedSection');
+            const qrSaved = document.getElementById('geoKeySavedLocationQR');
+            if (pre) pre.style.display = 'block';
+            if (saved) saved.style.display = 'none';
+            if (qrSaved) qrSaved.innerHTML = '';
+            setClaimMapChromeVisible(true);
+        }
+
+        function syncClaimGeoKeyUsernameField() {
+            const userEl = document.getElementById('username');
+            if (!userEl) return;
+            if (userEl.value.trim() !== '') return;
+            const locEl = document.getElementById('inspectLocationInput');
+            let loc = locEl && locEl.value.trim();
+            if (!loc) {
+                try {
+                    const g = JSON.parse(document.getElementById('geoKey').value);
+                    if (g && g.location) loc = g.location;
+                } catch (_) { /* ignore */ }
+            }
+            if (loc) userEl.value = claimedLocationUsernameFromAddress(loc);
+        }
+
+        async function claimLocation() {
+            document.getElementById('geoKeySavedSection').style.display = 'none';
+            setClaimMapChromeVisible(true);
+
+            if (!_pendingClaimCoords) {
+                alert('Select a location on the map first.');
+                return;
+            }
+            var xi = _pendingClaimCoords.x;
+            var yi = _pendingClaimCoords.y;
+            var claimBtn = document.getElementById('claimLocationBtn');
+            if (claimBtn) {
+                claimBtn.disabled = true;
+                claimBtn.textContent = 'Claiming…';
+            }
+
+            var myGeoKey;
+            try {
+                myGeoKey = await utilities.claimLocation(xi, yi);
+            } catch (err) {
+                console.error('claimLocation failed:', err);
+                alert(err && err.message ? err.message : 'Could not claim that map position.');
+                setClaimLocationButtonPendingCoords(xi, yi);
+                return;
+            }
+
+            var ok = await applyStakedGeoKeyToForm(myGeoKey);
+            if (!ok) {
+                setClaimLocationButtonPendingCoords(xi, yi);
+                return;
+            }
+
+            _pendingClaimCoords = null;
+            _pendingClaim = false;
+
+            document.getElementById('congratulationsMessage').style.display = 'block';
+            document.getElementById('geoKeyContainer').style.display = 'block';
+            setClaimLocationButtonGeoKeyStep();
+            resetGeoKeySaveUI();
+            syncClaimGeoKeyUsernameField();
+
+            try {
+                const geoKeyText = document.getElementById('geoKey').value;
+                const geoKey = JSON.parse(geoKeyText);
+                if (typeof Oakspoke !== 'undefined' && Oakspoke.generateQRCode) {
+                    const qrDataUrl = await Oakspoke.generateQRCode(geoKey);
+                    document.getElementById('geoKeyQR').src = qrDataUrl;
+                }
+            } catch (e) {
+                console.log('Could not generate QR code:', e);
+            }
+        }
+
+        // Use utilities.getLatLong() instead - this local version was using wrong offset extraction
+
+        function historyEscapeHtml(s) {
+            return String(s)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
+        function parseAddressString(addressStr) {
+            // Format: X:x.hash_Y:y.hash (e.g., X:53.048f811ff51_Y:218.ab02eed7ee5)
+            if (!addressStr || !addressStr.includes('_') || !addressStr.includes('X:') || !addressStr.includes('Y:')) {
+                return null;
+            }
+
+            const [xPart, yPart] = addressStr.split('_');
+            const xValue = xPart.replace('X:', '');
+            const yValue = yPart.replace('Y:', '');
+            const [x, hexX] = xValue.split('.');
+            const [y, hexY] = yValue.split('.');
+
+            return { x: parseInt(x, 10), y: parseInt(y, 10), hexX, hexY };
+        }
+
+        /** Dot + up to two hex chars for history cell (trusted chars only). */
+        function formatHistoryLocHexSuffix2(hexPart) {
+            if (hexPart == null || hexPart === '') return '';
+            var h = String(hexPart).substring(0, 2);
+            if (!/^[a-fA-F0-9]{1,2}$/.test(h)) return '';
+            return '<span class="oak-history-loc-suffix">.' + h + '</span>';
+        }
+
+        /** History table cell HTML: e.g. "30<span class=…>.a3</span>, 213<span class=…>.3c</span>". */
+        function formatHistoryLocalCoordsDisplayHtml(localAddress) {
+            var p = parseAddressString(localAddress);
+            if (!p || Number.isNaN(p.x) || Number.isNaN(p.y)) return null;
+            return p.x + formatHistoryLocHexSuffix2(p.hexX) + ', ' + p.y + formatHistoryLocHexSuffix2(p.hexY);
+        }
+
+        /** History table cell HTML. Interoak: "ABC 30.a3, 213.3c" with grey suffixes. */
+        function formatHistoryTxLocationDisplayHtml(addressStr) {
+            if (addressStr == null || addressStr === '') return historyEscapeHtml('N/A');
+            var trimmed = String(addressStr).trim();
+            if (!trimmed) return historyEscapeHtml('N/A');
+
+            var interoak = trimmed.match(/^([A-Za-z]{3}):(X:\d+\.[a-fA-F0-9]+_Y:\d+\.[a-fA-F0-9]+)$/i);
+            if (interoak) {
+                var inner = formatHistoryLocalCoordsDisplayHtml(interoak[2]);
+                if (inner == null) return historyEscapeHtml(trimmed);
+                return historyEscapeHtml(interoak[1].toUpperCase()) + ' ' + inner;
+            }
+
+            var plain = formatHistoryLocalCoordsDisplayHtml(trimmed);
+            if (plain == null) return historyEscapeHtml(trimmed);
+            return plain;
+        }
+
+        async function buildHistorySummaryHtml(ablockBundle) {
+            var currentBlockNumber = ablockBundle.block;
+            var cTx = [];
+            var curTx = ablockBundle.transactions || [];
+            if (currentBlockNumber >= 1) {
+                try {
+                    var ablockBundlePrev = await utilities.getBlock(currentBlockNumber - 1);
+                    cTx = (ablockBundlePrev.transactions || []).concat(curTx);
+                } catch (e) {
+                    cTx = curTx;
+                }
+            } else {
+                cTx = curTx;
+            }
+            cTx.reverse();
+            if (cTx.length === 0) {
+                return '<p class="oak-history-empty">No transactions in the last two blocks.</p>';
+            }
+            var rows = cTx.map(function(tx) {
+                var memo = tx.memo != null && tx.memo !== '' ? historyEscapeHtml(tx.memo) : '';
+                var fromDisp = formatHistoryTxLocationDisplayHtml(tx.from);
+                var toDisp = formatHistoryTxLocationDisplayHtml(tx.to);
+                var amt = tx.amount != null ? tx.amount : 0;
+                return '<tr><td>' + fromDisp + '</td><td>' + toDisp + '</td><td>' + amt + '</td><td>' + memo + '</td></tr>';
+            }).join('');
+            return '<table class="table table-sm oak-history-table"><thead><tr><th>From</th><th>To</th><th>Amount</th><th>Memo</th></tr></thead><tbody>' +
+                rows + '</tbody></table>';
+        }
+
+        async function populateHistoryLedger() {
+            var bc = document.getElementById('blockchainContainer');
+            if (!bc) return;
+            bc.setAttribute('aria-busy', 'true');
+            try {
+                var ablockBundle = await blockPromise;
+                var formattedTx = await buildHistorySummaryHtml(ablockBundle);
+                _historySummaryHtml = formattedTx;
+                if (!_historyViewIsBlockDetail) {
+                    bc.innerHTML = formattedTx;
+                    bc.scrollTop = 0;
+                }
+                updateToggleBlockDetailButton();
+            } catch (e) {
+                console.warn('History load failed:', e);
+                var errHtml = '<p class="oak-history-empty">Could not load history.</p>';
+                _historySummaryHtml = errHtml;
+                if (!_historyViewIsBlockDetail) {
+                    bc.innerHTML = errHtml;
+                }
+            } finally {
+                bc.removeAttribute('aria-busy');
+            }
+        }
+
+        populateHistoryLedger();
+
+        // Check if string is a valid lat/long format: "40°42'03"N 74°00'55"W"
+        function isLatLongFormat(str) {
+            const regex = /(\d+)°(\d+)'(\d+)"([NS])\s+(\d+)°(\d+)'(\d+)"([EW])/i;
+            return regex.test(str);
+        }
+
+        async function inspectLocation() {
+            let addressStr = document.getElementById('inspectLocationInput').value.trim();
+            if (!addressStr) {
+                alert('Enter valid Oakspoke address or lat/long (e.g., 40°42\'03"N 74°00\'55"W)');
+                return;
+            }
+            
+            // Check if input is lat/long format and convert to GeoKey
+            if (isLatLongFormat(addressStr)) {
+                try {
+                    const geoKey = await utilities.createGeoKeyFromLatLong(addressStr);
+                    addressStr = geoKey.location;
+                    console.log('Created GeoKey from lat/long:', geoKey.location);
+                } catch (e) {
+                    alert('Invalid lat/long format: ' + e.message);
+                    return;
+                }
+            }
+            
+            const parsedAddress = parseAddressString(addressStr);
+            if (!parsedAddress) {
+                alert('Invalid address format. Expected: X:53.048f811ff51_Y:218.ab02eed7ee5 or 40°42\'03"N 74°00\'55"W');
+                return;
+            }
+            await reDrawMap(parsedAddress.x, parsedAddress.y);
+            await updateBalanceDisplay(addressStr);
+            await updateLatLongDisplay(addressStr);
+            document.getElementById('latLongBalanceContainer').style.display = 'block';
+
+            if (_pendingClaim) {
+                _pendingClaimCoords = { x: parsedAddress.x, y: parsedAddress.y };
+                setClaimLocationButtonReady(addressStr);
+                document.getElementById('locationQR').innerHTML = '';
+            } else {
+                _pendingClaimCoords = null;
+                setClaimLocationButtonIdle();
+                if (window.AcoornQR) {
+                    document.getElementById('locationQR').innerHTML =
+                        window.AcoornQR.toSVG(OAKSPOKE_PUBLIC_SEND_BASE + addressStr, { scale: 6, margin: 4, dark: '#3D1F0D' });
+                }
+            }
+        }
+
+        function addressToString(address) {
+            if (!address || !address.publicKeyHash) {
+                return '';
+            }
+            // Use X:_Y: format (not old N:_E: format)
+            return `X:${address.x}.${address.publicKeyHash.slice(0, 16)}_Y:${address.y}.${address.publicKeyHash.slice(16, 32)}`;
+        }
+
+        function updateDestLatLong() {
+            const dest = document.getElementById('destination').value;
+            if (!dest || !dest.includes('_') || !dest.includes('X:') || !dest.includes('Y:')) {
+                document.getElementById('destLatLong').innerHTML = '<small></small>';
+                return;
+            }
+
+                    try {
+                const latLong = utilities.getLatLong(dest);
+                if (latLong) {
+                    document.getElementById('destLatLong').innerHTML = '<small>' + utilities.formatLatLong(latLong) + '</small>';
+                }
+            } catch (e) {
+                document.getElementById('destLatLong').innerHTML = '<small></small>';
+            }
+        }
+
+        async function updateGeoKeyBalance() {
+            try {
+                const geoKey = document.getElementById('geoKeySend').value;
+                if (!geoKey || geoKey.trim() === '') {
+                    document.getElementById('balance').innerHTML = "";
+                    return 0;
+                }
+                const cleanGeoKey = geoKey.trim().replace(/[\u200B-\u200D\uFEFF]/g, '');
+                const parsedGeoKey = JSON.parse(cleanGeoKey);
+                const address = parsedGeoKey.location;  // lowercase 'location'
+                if (!address) {
+                    document.getElementById('balance').innerHTML = "<span style='color: orange;'>Invalid GeoKey</span>";
+                    return 0;
+                }
+                const balance = await utilities.getBalance(address);
+                
+                if (Number.isInteger(balance) && balance >= 0) {
+                    document.getElementById('balance').innerHTML = "<span style='color: #0d6efd;'>Balance: " + balance + "</span>";
+                    return 1;
+                }
+                document.getElementById('balance').innerHTML = "<span style='color: #0d6efd;'>Balance: 0</span>";
+                return 0;
+            } catch (e) {
+                console.log("updateGeoKeyBalance error:", e.message);
+                document.getElementById('balance').innerHTML = "";
+                return 0;
+            }
+        }
+
+        async function updateDestinationBalance() {
+            const dest = document.getElementById('destination').value;
+            const balance = await utilities.getBalance(dest);
+            
+            if (Number.isInteger(balance) && balance >= 0) {
+                document.getElementById('destinationbalance').innerHTML = "<span style='color: #0d6efd;'>Balance: " + balance + "</span>";
+                document.getElementById('resultDestBalance').textContent = balance;
+                return 1;
+            }
+            document.getElementById('destinationbalance').innerHTML = "<span style='color: #0d6efd;'> 0</span>";
+            document.getElementById('resultDestBalance').textContent = '0';
+            return 0;
+        }
+
+        // Tab navigation
+        function activateTabByHash(hash) {
+            if (!hash) return;
+            const raw = hash.startsWith('#') ? hash.substring(1) : hash;
+
+            // Handle #send/LOCATION[?amount=N][&memo=…] — extract location from end of hash.
+            // Supports doubled URLs like #send/https://oakspoke.com/#send/X:83...
+            // Optional query params:
+            //   amount  positive integer → prefills the amount input
+            //   memo    string (URL-encoded) → prefills the memo input
+            // Lenient: extra `?` separators (e.g. ?amount=300?memo=…) are treated as `&`.
+            const sendMatch = raw.match(/^send\/(.*)/);
+            if (sendMatch) {
+                const tail = sendMatch[1];
+                const locMatch = tail.match(/(X:\d+\.\w+_Y:\d+\.\w+)(?:\?([^#]*))?$/);
+                if (locMatch) {
+                    activateTab('send');
+                    document.getElementById('destination').value = locMatch[1];
+                    updateDestinationBalance();
+
+                    if (locMatch[2]) {
+                        try {
+                            const normalized = locMatch[2].replace(/\?/g, '&');
+                            const params = new URLSearchParams(normalized);
+
+                            const amountStr = params.get('amount');
+                            if (amountStr !== null) {
+                                const amountNum = parseInt(amountStr, 10);
+                                if (Number.isFinite(amountNum) && amountNum > 0) {
+                                    const amountEl = document.getElementById('amount');
+                                    if (amountEl) {
+                                        amountEl.value = String(amountNum);
+                                        amountEl.dispatchEvent(new Event('input', { bubbles: true }));
+                                        amountEl.dispatchEvent(new Event('change', { bubbles: true }));
+                                    }
+                                }
+                            }
+
+                            const memoStr = params.get('memo');
+                            if (memoStr !== null) {
+                                const memoEl = document.getElementById('msg');
+                                if (memoEl) {
+                                    const max = parseInt(memoEl.getAttribute('maxlength') || '0', 10);
+                                    memoEl.value = max > 0 ? memoStr.slice(0, max) : memoStr;
+                                    memoEl.dispatchEvent(new Event('input', { bubbles: true }));
+                                    memoEl.dispatchEvent(new Event('change', { bubbles: true }));
+                                }
+                            }
+                        } catch (_) { /* ignore malformed query */ }
+                    }
+                    return;
+                }
+            }
+
+            const tabFromHash = raw === 'blockchain' ? 'feed' : raw;
+            const validTabs = ['map', 'send', 'feed', 'about'];
+            if (validTabs.includes(tabFromHash)) {
+                activateTab(tabFromHash);
+            }
+        }
+
+        function activateTab(tabId) {
+            const previousPane = document.querySelector('.tab-pane.active');
+            const previousTabId = previousPane ? previousPane.id : null;
+
+            const tabLink = document.querySelector(`.nav-link[href="#${tabId}"]`);
+            if (tabLink) {
+                document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+                document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+                tabLink.classList.add('active');
+                const targetPane = document.querySelector(`#${tabId}`);
+                if (targetPane) targetPane.classList.add('active');
+            }
+            if (tabId === 'send' && previousTabId !== 'send') {
+                resetSendTabToCompose();
+            }
+        }
+
+        if (window.location.hash) {
+            activateTabByHash(window.location.hash);
+        }
+
+        window.addEventListener('hashchange', function() {
+            activateTabByHash(window.location.hash);
+        });
+
+        document.querySelectorAll('.nav-link').forEach(navLink => {
+            navLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                const href = this.getAttribute('href');
+                if (!href || !href.startsWith('#')) return;
+                const tabId = href.substring(1);
+                activateTab(tabId);
+                window.history.pushState(null, '', href);
+            });
+        });
+
+        // Map click handler — pin + pending coords only; GeoKey is created when Claim is pressed
+        canvas.addEventListener('click', async function(event) {
+            var rect = canvas.getBoundingClientRect();
+            var x = event.clientX - rect.left;
+            var y = event.clientY - rect.top;
+
+            var Mx = (x / rect.width) * 256;
+            var My = MAP_HEIGHT - ((y / rect.height) * 256);
+
+            dismissMapOnboardingOverlay();
+            await selectClaimMapPoint(Mx, My);
+        });
+
+        var mapOnboardingDismissBtn = document.getElementById('mapOnboardingDismissBtn');
+        if (mapOnboardingDismissBtn) {
+            mapOnboardingDismissBtn.addEventListener('click', function() {
+                dismissMapOnboardingOverlay();
+                scheduleFakeTapHint();
+            });
+        }
+
+        // Event listeners
+        document.getElementById('claimLocationBtn').addEventListener('click', claimLocation);
+        var geoKeyShareLocationBtn = document.getElementById('geoKeyShareLocationBtn');
+        if (geoKeyShareLocationBtn) {
+            geoKeyShareLocationBtn.addEventListener('click', function() {
+                shareClaimedOakspokeLocation();
+            });
+        }
+        var historyLookupShareBtn = document.getElementById('historyLookupShareBtn');
+        if (historyLookupShareBtn) {
+            historyLookupShareBtn.addEventListener('click', function() {
+                shareHistoryLookupPublicLink();
+            });
+        }
+        var geoKeyCopyPublicAddressBtn = document.getElementById('geoKeyCopyPublicAddressBtn');
+        if (geoKeyCopyPublicAddressBtn) {
+            geoKeyCopyPublicAddressBtn.addEventListener('click', function() {
+                copyGeoKeySavedPublicAddress();
+            });
+        }
+        document.getElementById('sendButton').addEventListener('click', sendTransaction);
+        document.getElementById('lookupButton').addEventListener('click', inspectLocation);
+
+        document.getElementById('inspectLocationInput').addEventListener('keydown', function(event) {
+            _pendingClaim = false;
+            setClaimLocationButtonIdle();
+            document.getElementById('congratulationsMessage').style.display = 'none';
+            document.getElementById('geoKeyContainer').style.display = 'none';
+            document.getElementById('geoKeySavedSection').style.display = 'none';
+            document.getElementById('latLongBalanceContainer').style.display = 'none';
+            setClaimMapChromeVisible(true);
+
+            if (event.key === 'Enter' || event.key === 'Tab') {
+                inspectLocation();
+            }
+        });
+
+        /**
+         * Save GeoKey JSON: native “Save as” picker when supported (Chrome, Edge, …),
+         * else classic download. Returns false if user cancels the picker.
+         */
+        async function saveGeoKeyJsonWithPicker(blob, suggestedName) {
+            if (typeof window.showSaveFilePicker === 'function') {
+                try {
+                    const handle = await window.showSaveFilePicker({
+                        suggestedName: suggestedName,
+                        types: [{
+                            description: 'GeoKey (JSON)',
+                            accept: { 'application/json': ['.json'] }
+                        }]
+                    });
+                    const writable = await handle.createWritable();
+                    await writable.write(blob);
+                    await writable.close();
+                    return true;
+                } catch (err) {
+                    if (err && err.name === 'AbortError') return false;
+                    console.warn('showSaveFilePicker failed, using download fallback:', err);
+                }
+            }
+            try {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = suggestedName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                return true;
+            } catch (e2) {
+                console.error(e2);
+                return false;
+            }
+        }
+
+        document.getElementById('claimGeoKeyCredentialsForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            syncClaimGeoKeyUsernameField();
+            const geoKeyEl = document.getElementById('geoKey');
+            const userEl = document.getElementById('username');
+            const addressStr = (document.getElementById('inspectLocationInput').value || '').trim();
+            const geoKeyContent = geoKeyEl.value;
+            const blob = new Blob([geoKeyContent], { type: 'application/json' });
+
+            let nick = userEl && userEl.value ? userEl.value.trim() : '';
+            if (!nick) nick = claimedLocationUsernameFromAddress(addressStr);
+            if (!nick) nick = 'GeoKey';
+            const safeBase = sanitizeWindowsFileNameBase(nick);
+            const downloadName = /\.json$/i.test(safeBase) ? safeBase : safeBase + '.json';
+
+            const didSave = await saveGeoKeyJsonWithPicker(blob, downloadName);
+            if (!didSave) return;
+
+            document.getElementById('congratulationsMessage').style.display = 'none';
+            document.getElementById('geoKeySavedLocation').textContent = addressStr || '—';
+            var shareBtnAfterSave = document.getElementById('geoKeyShareLocationBtn');
+            if (shareBtnAfterSave) shareBtnAfterSave.disabled = !addressStr;
+            var copyBtnAfterSave = document.getElementById('geoKeyCopyPublicAddressBtn');
+            if (copyBtnAfterSave) copyBtnAfterSave.disabled = !addressStr;
+
+            const qrSaved = document.getElementById('geoKeySavedLocationQR');
+            if (window.AcoornQR && addressStr) {
+                qrSaved.innerHTML = window.AcoornQR.toSVG(OAKSPOKE_PUBLIC_SEND_BASE + addressStr, { scale: 6, margin: 4, dark: '#3D1F0D' });
+            } else {
+                qrSaved.innerHTML = addressStr ? '<span class="text-muted small">QR code library not loaded</span>' : '';
+            }
+
+            document.getElementById('geoKeyPreSaveSection').style.display = 'none';
+            document.getElementById('geoKeyContainer').style.display = 'none';
+            document.getElementById('geoKeySavedSection').style.display = 'block';
+            setClaimMapChromeVisible(false);
+
+            resetMapClaimSelectionAfterSave();
+
+            requestAnimationFrame(() => {
+                const panel = document.getElementById('geoKeySavedSection');
+                const heading = document.getElementById('geoKeySavedHeading');
+                if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                if (heading) heading.focus({ preventScroll: true });
+            });
+        });
+
+        document.getElementById('geoKeySend').addEventListener('blur', updateGeoKeyBalance);
+        document.getElementById('geoKeySend').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' || event.key === 'Tab') updateGeoKeyBalance();
+        });
+
+        document.getElementById('destination').addEventListener('blur', function() {
+            updateDestinationBalance();
+            updateDestLatLong();
+        });
+
+        document.getElementById('destination').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' || event.key === 'Tab') {
+                updateDestinationBalance();
+                updateDestLatLong();
+            }
+        });
+
+        // Emoji picker
+        const emojiPickerBtn = document.getElementById('emojiPickerBtn');
+        const emojiPickerContainer = document.getElementById('emojiPickerContainer');
+        const emojiPicker = document.getElementById('emojiPicker');
+        const msgInput = document.getElementById('msg');
+        const msgInputLabel = document.querySelector('label[for="msg"]');
+
+        var _suppressEmojiPickerOpenOnNextMsgFocus = false;
+
+        function toggleEmojiPickerFromButton() {
+            var isVisible = emojiPickerContainer.style.display !== 'none';
+            emojiPickerContainer.style.display = isVisible ? 'none' : 'block';
+        }
+
+        function openEmojiPicker() {
+            emojiPickerContainer.style.display = 'block';
+        }
+
+        emojiPickerBtn.addEventListener('click', function() {
+            toggleEmojiPickerFromButton();
+        });
+
+        msgInput.addEventListener('focus', function() {
+            if (_suppressEmojiPickerOpenOnNextMsgFocus) return;
+            openEmojiPicker();
+        });
+
+        emojiPicker.addEventListener('emoji-click', function(event) {
+            const emoji = event.detail.emoji || event.detail.unicode;
+            if (msgInput.value.length < 32) {
+                msgInput.value += emoji;
+                _suppressEmojiPickerOpenOnNextMsgFocus = true;
+                msgInput.focus();
+                setTimeout(function() {
+                    _suppressEmojiPickerOpenOnNextMsgFocus = false;
+                }, 100);
+            }
+        });
+
+        document.addEventListener('pointerdown', function(event) {
+            if (!emojiPickerContainer || emojiPickerContainer.style.display === 'none') return;
+            if (emojiPickerBtn.contains(event.target)) return;
+            if (event.target === msgInput || msgInput.contains(event.target)) return;
+            if (msgInputLabel && (event.target === msgInputLabel || msgInputLabel.contains(event.target))) return;
+            var rect = emojiPicker.getBoundingClientRect();
+            var x = event.clientX;
+            var y = event.clientY;
+            var inside = x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+            if (!inside) {
+                emojiPickerContainer.style.display = 'none';
+            }
+        });
+
+        // Emoji-only input restriction
+        const emojiRegex = /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FAFF}\u{2190}-\u{21FF}\u{2B00}-\u{2BFF}\u{1F000}-\u{1FAFF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}]/gu;
+
+        msgInput.addEventListener('input', function(event) {
+            const input = event.target;
+            const filteredValue = input.value.split('').filter(char => {
+                return emojiRegex.test(char) || /[\u{1F1E0}-\u{1F1FF}]/u.test(char);
+            }).join('');
+            if (input.value !== filteredValue) input.value = filteredValue;
+        });
+
+        msgInput.addEventListener('paste', function(event) {
+            event.preventDefault();
+            const paste = (event.clipboardData || window.clipboardData).getData('text');
+            const filteredPaste = paste.split('').filter(char => {
+                return emojiRegex.test(char) || /[\u{1F1E0}-\u{1F1FF}]/u.test(char);
+            }).join('');
+
+            const input = event.target;
+            const start = input.selectionStart;
+            const end = input.selectionEnd;
+            const newValue = input.value.substring(0, start) + filteredPaste + input.value.substring(end);
+
+            if (newValue.length <= 32) {
+                input.value = newValue;
+                input.setSelectionRange(start + filteredPaste.length, start + filteredPaste.length);
+            } else {
+                input.value = newValue.substring(0, 32);
+                input.setSelectionRange(32, 32);
+            }
+        });
+
+        // File picker for GeoKey
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileBtn = document.getElementById('geoKeySendFileBtn');
+            const fileInput = document.getElementById('geoKeySendFileInput');
+            const textarea = document.getElementById('geoKeySend');
+
+            if (fileBtn && fileInput && textarea) {
+                fileBtn.addEventListener('click', function() {
+                    fileInput.value = "";
+                    fileInput.click();
+                });
+
+                fileInput.addEventListener('change', function(event) {
+                    const file = event.target.files[0];
+                    if (!file) return;
+
+                    const lower = file.name.toLowerCase();
+                    if (!lower.endsWith('.json')) {
+                        alert('Please select a GeoKey backup .json file.');
+                        return;
+                    }
+                    const base = file.name.slice(0, -5);
+                    const xyPair = /_X[:-].+_Y[:-]/i.test(base);
+                    const myLocationGrid = /^mylocation_\d+_\d+$/i.test(base);
+                    const looksLikeGeoKeyName = /^oakspoke/i.test(base) || /^mylocation_/i.test(base) || myLocationGrid || xyPair;
+                    if (!looksLikeGeoKeyName) {
+                        alert('Please select a GeoKey .json saved from Oakspoke (e.g. MyLocation_233_37.json).');
+                        return;
+                    }
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        textarea.value = e.target.result;
+                        textarea.dispatchEvent(new Event('input'));
+                    };
+                    reader.readAsText(file);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+
